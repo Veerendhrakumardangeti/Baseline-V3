@@ -1,10 +1,10 @@
-(ptbxl-venv) PS C:\Users\dines> python train_pdd.py `
->>   --data_dir C:\Users\dines\results\baseline `
->>   --difficulty C:\Users\dines\results\baseline\difficulty.npy `
+(ptbxl-venv) PS C:\Users\veer> python train_pdd.py `
+>>   --data_dir C:\Users\veer\results\baseline `
+>>   --difficulty C:\Users\veer\results\baseline\difficulty.npy `
 >>   --model inception `
 >>   --epochs 30 `
 >>   --batch_size 32 `
->>   --ckpt_dir C:\Users\dines\results\pdd_mild_30ep `
+>>   --ckpt_dir C:\Users\veer\results\pdd_mild_30ep `
 >>   --easy_pct 0.3 `
 >>   --medium_pct 0.85 `
 >>   --gamma 0.985 `
@@ -101,4 +101,5 @@ Epoch 29: using 267 / 213 samples
 Epoch 29/30  Train Loss=0.0316 Acc=0.9963  Val Loss=0.7221 Acc=0.7500
 Epoch 30: using 254 / 213 samples
 [DEBUG] batch 0 — x.shape: torch.Size([32, 12, 1000]), x.dtype: torch.float32, device: cpu
+
 Epoch 30/30  Train Loss=0.0149 Acc=1.0000  Val Loss=0.7951 Acc=0.6786
