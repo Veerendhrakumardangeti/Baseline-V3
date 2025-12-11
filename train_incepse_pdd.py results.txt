@@ -1,0 +1,45 @@
+(ptbxl-venv) PS C:\Users\dines> python train_incepse_pdd.py `
+>>   --data_dir C:\Users\dines\results\baseline `
+>>   --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu `
+>>   --epochs 30 `
+>>   --batch_size 32 `
+>>   --num_workers 0
+[INFO] Inception-SE Training: channels=12, classes=4
+[EPOCH 1] Train Acc=0.5540 | Val Acc=0.6786
+Saved best model
+
+[EPOCH 2] Train Acc=0.8075 | Val Acc=0.6786
+[EPOCH 3] Train Acc=0.8169 | Val Acc=0.7500
+Saved best model
+
+[EPOCH 4] Train Acc=0.8451 | Val Acc=0.7500
+[EPOCH 5] Train Acc=0.8920 | Val Acc=0.7143
+[EPOCH 6] Train Acc=0.9061 | Val Acc=0.8214
+Saved best model
+
+[EPOCH 7] Train Acc=0.9249 | Val Acc=0.2500
+[EPOCH 8] Train Acc=0.9437 | Val Acc=0.7500
+[EPOCH 9] Train Acc=0.9671 | Val Acc=0.6786
+[EPOCH 10] Train Acc=0.9906 | Val Acc=0.7500
+[EPOCH 11] Train Acc=0.9859 | Val Acc=0.7857
+[EPOCH 12] Train Acc=0.9765 | Val Acc=0.8214
+[EPOCH 13] Train Acc=0.9953 | Val Acc=0.7143
+[EPOCH 14] Train Acc=1.0000 | Val Acc=0.7143
+[EPOCH 15] Train Acc=0.9953 | Val Acc=0.8571
+Saved best model
+
+[EPOCH 16] Train Acc=1.0000 | Val Acc=0.8214
+[EPOCH 17] Train Acc=1.0000 | Val Acc=0.7857
+[EPOCH 18] Train Acc=1.0000 | Val Acc=0.7500
+[EPOCH 19] Train Acc=1.0000 | Val Acc=0.7500
+[EPOCH 20] Train Acc=1.0000 | Val Acc=0.8571
+[EPOCH 21] Train Acc=0.9953 | Val Acc=0.8214
+[EPOCH 22] Train Acc=0.9953 | Val Acc=0.6786
+[EPOCH 23] Train Acc=0.9812 | Val Acc=0.7143
+[EPOCH 24] Train Acc=0.9906 | Val Acc=0.7500
+[EPOCH 25] Train Acc=0.9859 | Val Acc=0.7500
+[EPOCH 26] Train Acc=0.9859 | Val Acc=0.6786
+[EPOCH 27] Train Acc=0.9765 | Val Acc=0.7500
+[EPOCH 28] Train Acc=0.9859 | Val Acc=0.3929
+[EPOCH 29] Train Acc=0.9906 | Val Acc=0.6786
+[EPOCH 30] Train Acc=0.9953 | Val Acc=0.7500
