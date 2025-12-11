@@ -1,4 +1,4 @@
-** "Progressive Data Dropout for ECG Classification (PTB-XL)"**
+***Progressive Data Dropout for ECG Classification (PTB-XL)"**
 
   This repository investigates Progressive Data Dropout (PDD), a difficulty-aware
   training strategy for ECG classification using the PTB-XL dataset. A strong
@@ -111,17 +111,7 @@ The baseline model already fits the dataset well, and PDD needs further tuning f
 
 ---
 
-# 🔄 Workflow Summary
-
-1. Preprocess PTB-XL dataset  
-2. Compute difficulty scores  
-3. Train Inception-SE baseline  
-4. Evaluate baseline  
-5. Train PDD variants  
-6. Evaluate PDD models  
-7. Aggregate all experiment results
-
-outputs:
+**outputs:**
   files_generated:
     - best_model.pth
     - val_metrics.npz
@@ -139,7 +129,7 @@ Each experiment produces:
    
   observation: "PDD did NOT outperform the baseline."
 
-workflow_summary:
+**workflow_summary:**
   - Preprocess PTB-XL dataset
   - Compute difficulty scores
   - Train baseline Inception-SE model
@@ -148,7 +138,7 @@ workflow_summary:
   - Evaluate PDD
   - Aggregate and compare metrics
 
-output_files:
+**output_files:**
   - best_model.pth
   - val_metrics.npz
   - test_metrics.npz
@@ -158,7 +148,7 @@ output_files:
   - test_perclass.csv
   - results_summary_*.csv
 
-key_observations:
+**key_observations:**
   - Inception-SE outperforms 1D-CNN by a large margin
   - Baseline model achieves high accuracy and macro-F1 without PDD
   - PDD did not outperform baseline due to:
@@ -167,7 +157,8 @@ key_observations:
       * Sensitivity of PDD in deeper architectures
       * Need for more selective sample dropout mechanisms
 
-conclusion: |
+**conclusion:** 
+
   This repository provides a complete exploration of Progressive Data Dropout using a strong
   Inception-SE ECG classifier on PTB-XL. Although PDD did not outperform the baseline,
   the project demonstrates valuable insights into curriculum learning, difficulty-based sampling,
