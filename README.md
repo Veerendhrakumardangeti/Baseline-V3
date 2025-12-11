@@ -1,4 +1,4 @@
-***Progressive Data Dropout for ECG Classification (PTB-XL)"**
+# Progressive Data Dropout for ECG Classification (PTB-XL)
 
   This repository investigates Progressive Data Dropout (PDD), a difficulty-aware
   training strategy for ECG classification using the PTB-XL dataset. A strong
@@ -19,6 +19,8 @@
 
 **repository_structure:**
   **files:**
+  
+  ```
     - train_inception.py: "Inception-SE baseline training"
     - train_incepse_pdd.py: "Inception-SE with PDD integrated"
     - train_pdd.py: "Standalone PDD implementation"
@@ -27,6 +29,8 @@
     - aggregate_metrics.py: "Aggregates all experiment results"
     - results/: "Saved training runs, logs, CSVs"
     - README.md
+```
+---
   legacy:
     url: "https://github.com/Veerendhrakumardangeti/baseline-V2"
     description: "Earlier CNN-based baseline with initial PDD experiments"
@@ -47,6 +51,7 @@ model_evolution:
     status: "Primary model used for experiments"
 
 commands:
+```
   train_inception_se:
     command: >
       python train_incepse_pdd.py
@@ -79,6 +84,7 @@ commands:
   aggregate_results:
     command: "python aggregate_metrics.py"
     output: "results_summary_YYYYMMDD_HHMMSS.csv"
+```
 
   best_model:
     name: "Inception-SE baseline"
@@ -90,7 +96,7 @@ commands:
     - PDD requires improved schedules and adaptive dropout strategies.
     - Deeper architectures react more sensitively to difficulty-based sampling.
 
-# 📊 Results Summary
+#  Results Summary
 
 | Model / Folder                     | Val Accuracy | Macro-F1 |
 |-----------------------------------|--------------|----------|
@@ -105,7 +111,7 @@ commands:
 - Accuracy: **0.8571**  
 - Macro-F1: **0.72**
 
-### ❗ Important Observation  
+###  Important Observation  
 **PDD did not outperform the strong Inception-SE baseline**.  
 The baseline model already fits the dataset well, and PDD needs further tuning for deeper architectures.
 
@@ -123,7 +129,7 @@ The baseline model already fits the dataset well, and PDD needs further tuning f
   aggregated_results: "Generated via aggregate_metrics.py"
 
 ---------------------------------------------------------------
-# 💾 Output Files
+#  Output Files
 
 Each experiment produces:
    
