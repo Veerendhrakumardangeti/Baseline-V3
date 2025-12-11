@@ -30,23 +30,23 @@ Extract into:
 # Project Structure
 
 project-root/
-│ train_1d_baseline.py
-│ train_local.py
-│ preprocess_local.py
-│ preprocess_quick.py
-│ compute_difficulty.py
-│ pdd_split.py
-│
-├── ptbxl_data/
-│
-├── results/
-│ ├── baseline/
-│ ├── pdd_srd_ckpt/
-│ └── reports/
-│ ├── baseline_report.txt
-│ ├── pdd_srd_gamma0.95_report.txt
-│ └── comparison/
-│ └── baseline_vs_pdd.txt
+-│ train_1d_baseline.py
+-│ train_local.py
+-│ preprocess_local.py
+-│ preprocess_quick.py
+-│ compute_difficulty.py
+-│ pdd_split.py
+-│
+-├── ptbxl_data/
+-│
+-├── results/
+-│ ├── baseline/
+-│ ├── pdd_srd_ckpt/
+-│ └── reports/
+-│ ├── baseline_report.txt
+-│ ├── pdd_srd_gamma0.95_report.txt
+-│ └── comparison/
+-│ └── baseline_vs_pdd.txt
 
 ---
 
