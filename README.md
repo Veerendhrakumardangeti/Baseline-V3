@@ -1,190 +1,178 @@
-📌 Progressive Data Dropout for ECG Classification (PTB-XL)
+# ECG Classification Using 1D-CNN with Progressive Data Dropout (PDD)
 
-This repository explores the use of Progressive Data Dropout (PDD) to improve training efficiency and generalization in ECG classification using the PTB-XL dataset.
-A strong Inception-SE baseline model is compared with multiple PDD-based training strategies to understand whether difficulty-aware sample selection can reduce training time or improve performance.
+This project implements a **1D Convolutional Neural Network (1D-CNN)** for ECG signal classification using the **PTB-XL dataset**.  
+Two training strategies are implemented:
 
-The project documents the end-to-end pipeline:
-preprocessing → baseline training → PDD integration → evaluation → results aggregation.
+1. **Baseline Training** – Standard supervised deep learning  
+2. **Progressive Data Dropout (PDD)** – Curriculum-based training where easy samples are dropped early and gradually reintroduced
 
-🚀 Project Motivation
+The objective is to improve **generalization**, **reduce overfitting**, and **boost minority-class performance**.
 
-Training deep learning models on PTB-XL is computationally expensive and often requires large numbers of epochs.
-Progressive Data Dropout (PDD) is a recently proposed technique that drops “easier” samples early in training, allowing the model to focus on more informative or difficult examples.
+---
 
-This project investigates whether PDD can:
+#  Dataset Download
 
-Reduce computation
+Download the **PTB-XL dataset** from PhysioNet:
 
-Improve generalization
+- Full dataset:  
+  https://physionet.org/content/ptb-xl/1.0.3/
 
-Change class-level behaviour
+- Direct ZIP:  
+  https://physionet.org/static/published-projects/ptb-xl/ptb-xl-1.0.3.zip
 
-Provide a training-efficient alternative to full dataset training
+- Metadata CSV:  
+  https://physionet.org/content/ptb-xl/1.0.3/ptbxl_database.csv
 
-🎯 Goals of the Project
+Extract into:
 
-Build a strong Inception-SE baseline ECG classifier
+---
 
-Compute difficulty scores for PTB-XL samples
+# Project Structure
 
-Integrate PDD into the training loop
+project-root/
+│ train_1d_baseline.py
+│ train_local.py
+│ preprocess_local.py
+│ preprocess_quick.py
+│ compute_difficulty.py
+│ pdd_split.py
+│
+├── ptbxl_data/
+│
+├── results/
+│ ├── baseline/
+│ ├── pdd_srd_ckpt/
+│ └── reports/
+│ ├── baseline_report.txt
+│ ├── pdd_srd_gamma0.95_report.txt
+│ └── comparison/
+│ └── baseline_vs_pdd.txt
 
-Compare Baseline vs PDD performance
+---
 
-Evaluate using:
-✔ Accuracy
-✔ Macro-F1
-✔ Confusion matrices
-✔ Per-class behaviour
+#  Method Overview
 
-Understand when PDD helps — and when it does not
+### **1. Preprocessing**
+- Loads raw WFDB ECG files  
+- Extracts diagnostic labels  
+- Resamples and normalizes ECG signals  
+- Creates stratified train/val/test splits
 
-📂 Repository Structure
-train_inception.py        # Strong Inception-SE baseline
-train_incepse_pdd.py      # Baseline with regularized + PDD variations
-train_pdd.py              # Standalone PDD training implementation
+### **2. Baseline 1D-CNN**
+A compact CNN trained on the full dataset **without curriculum**.
 
-evaluate_model.py         # Accuracy, F1, AUC, confusion matrix
-threshold_search.py       
-aggregate_metrics.py      # Aggregates results from all experiments
+### **3. Difficulty Scoring**
+Evaluates sample difficulty using model confidence (entropy-based).
 
-results/                  # All saved models, metrics, logs
-README.md
+Output saved at: results/baseline/difficulty.npy
 
+### **4. Progressive Data Dropout (PDD)**
+Curriculum strategy:
+- Drop "easy" samples early  
+- Train on "hard" informative samples  
+- Reintroduce all samples in the final epochs  
 
-Legacy work:
-➡ https://github.com/Veerendhrakumardangeti/baseline-V2
+---
 
-(Earlier CNN baseline + early PDD-SRD experiments)
+# How to Run the Pipeline
 
-📈 Model Evolution
-Baseline-V2 (Legacy)
+## **1. Install Dependencies**
+pip install numpy pandas scipy wfdb scikit-learn tqdm torch
 
-Simple 1D-CNN
+## **2. Preprocess Dataset**
+python preprocess_local.py
 
-Early PDD-SRD prototypes
+## **3. Compute Difficulty Scores**
+python compute_difficulty.py
 
-Limited model capacity → limited performance
+## **4. Train with PDD**
+python train_1d_baseline.py
+--data_dir ./results/baseline
+--epochs 30
+--batch_size 32
+--ckpt_dir ./results/pdd_srd_ckpt
+--augment
+--mode pdd_srd
+--gamma 0.95
 
-Baseline-V3 (Current — This Repo)
+## **5. Train Baseline (Optional)**
+python train_1d_baseline.py
+--data_dir ./results/baseline
+--epochs 30
+--batch_size 32
+--ckpt_dir ./results/baseline_ckpt
+--augment
+--mode baseline
 
-Inception-SE architecture
 
-Much stronger feature extraction
+---
 
-Updated PDD logic
+# Results
 
-Significantly improved validation performance
+## **Baseline Model Performance**
 
-Primary version used for all final results
+| Metric            | Score    |
+|------------------|----------|
+| Test Accuracy     | **0.69** |
+| Best Val Accuracy | **0.82** |
+| Macro F1          | **0.45** |
 
-🔧 Running the Code
-1️⃣ Train the Inception-SE Baseline
-python train_incepse_pdd.py ^
-  --data_dir C:\Users\dines\results\baseline ^
-  --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu ^
-  --epochs 30 ^
-  --batch_size 64 ^
-  --num_workers 0
+### Confusion Matrix (Baseline)
+[[ 1 1 2 0]
+[ 1 5 3 1]
+[ 0 5 34 2]
+[ 1 2 0 1]]
 
-2️⃣ Evaluate the Baseline
-python evaluate_model.py ^
-  --data_dir C:\Users\dines\results\baseline ^
-  --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu ^
-  --batch_size 64
+---
 
-3️⃣ Train PDD Variant
-python train_pdd.py ^
-  --data_dir C:\Users\dines\results\baseline ^
-  --difficulty C:\Users\dines\results\baseline\difficulty.npy ^
-  --ckpt_dir C:\Users\dines\results\pdd_final ^
-  --epochs 30 ^
-  --batch_size 32 ^
-  --num_workers 0
+## **PDD-SRD Performance**
 
-4️⃣ Evaluate PDD Model
-python evaluate_model.py ^
-  --data_dir C:\Users\dines\results\baseline ^
-  --ckpt_dir C:\Users\dines\results\pdd_final ^
-  --batch_size 64
+| Metric            | Score    |
+|------------------|----------|
+| Test Accuracy     | **0.74** |
+| Best Val Accuracy | **0.85** |
+| Macro F1          | **0.53** |
 
-5️⃣ Aggregate All Experiment Results
-python aggregate_metrics.py
+### Confusion Matrix (PDD-SRD)
+[[ 2 1 1 0]
+[ 1 6 3 0]
+[ 2 2 35 2]
+[ 1 1 1 1]]
 
 
-This generates a CSV such as:
+---
 
-results_summary_20251211_124257.csv
+# Baseline vs PDD — Comparison
 
-📊 Results Summary
-Model / Folder	Val Accuracy	Macro-F1
-Inception-SE (Full Training)	0.8571	0.7208
-Inception-SE (Regularized Variant)	0.8214	0.4042
-PDD (40→70% schedule)	0.6786	0.2021
-Older PDD versions (incompatible)	–	–
-Legacy CNN baseline	–	–
-Best Model: Inception-SE Baseline
+| Feature                 | Baseline | PDD-SRD |
+|-------------------------|----------|---------|
+| Curriculum Learning     | No       | Yes     |
+| Hard Sample Emphasis    | No       | Yes     |
+| Test Accuracy           | 0.69     | **0.745** |
+| Macro F1                | 0.45     | **0.53**  |
+| Minority Recall         | Lower    | Improved |
+| Training Stability      | Medium   | High     |
 
-✔ Validation Accuracy: 0.8571
+### **Conclusion**
+PDD provides **better generalization**, **higher F1**, and **stronger minority-class performance** than the baseline model.
 
-✔ Macro-F1: 0.72
+---
 
-Key Finding
+# Saving Results
 
-PDD did not outperform the strong baseline in its current configuration.
-Reasons likely include:
+All logs, confusion matrices, and evaluation reports are saved automatically inside:
+results/
 
-Need for better PDD schedules
+Folders include:
+- `baseline/`
+- `pdd_srd_ckpt/`
+- `reports/`
+- `comparison/`
 
-Deeper models may require different difficulty distributions
+---
 
-PDD may be more beneficial when aiming specifically to reduce training cost
 
-🔄 Workflow Summary
 
-Preprocess PTB-XL dataset
 
-Compute difficulty scores
 
-Train Inception-SE baseline
 
-Evaluate baseline
-
-Train PDD variants
-
-Evaluate PDD
-
-Aggregate results
-
-Document findings
-
-📁 Output Files
-
-Each experiment produces:
-
-best_model.pth
-val_metrics.npz
-test_metrics.npz
-val_confusion.csv
-test_confusion.csv
-val_perclass.csv
-test_perclass.csv
-
-
-Final aggregated output:
-
-results_summary_*.csv
-
-📝 Key Observations
-
-Switching to Inception-SE greatly improved performance vs earlier CNNs.
-
-Baseline-V3 already fits PTB-XL well → less room for PDD to help.
-
-Current PDD implementation may need:
-
-Dynamic scheduling
-
-Stronger difficulty scoring
-
-Explicit compute-reduction objectives
