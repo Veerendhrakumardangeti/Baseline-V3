@@ -1,100 +1,94 @@
-project:
-  title: "Progressive Data Dropout for ECG Classification (PTB-XL)"
-  description: |
-    This repository explores the use of Progressive Data Dropout (PDD) for improving
-    training efficiency and behavior in ECG classification using the PTB-XL dataset.
-    A strong Inception-SE baseline model is compared against multiple PDD training
-    strategies to evaluate whether difficulty-based sample selection offers
-    performance improvements or training-time benefits. The project implements the
-    full pipeline: preprocessing → baseline training → PDD integration → evaluation
-    → metrics aggregation.
+** "Progressive Data Dropout for ECG Classification (PTB-XL)"**
 
-motivation: |
-  Deep learning models trained on PTB-XL require significant compute and long training cycles.
-  Progressive Data Dropout (PDD) is a difficulty-aware method that selectively drops easy samples early.
-  This project investigates whether PDD can improve generalization, reduce dataset dependence, and enhance efficiency.
+  This repository investigates Progressive Data Dropout (PDD), a difficulty-aware
+  training strategy for ECG classification using the PTB-XL dataset. A strong
+  Inception-SE baseline is compared with multiple PDD strategies to understand
+  whether selective data exposure improves performance or reduces training cost.
 
-objectives:
-  - Build a strong and reliable Inception-SE ECG classifier
-  - Compute difficulty scores for PTB-XL samples
-  - Integrate PDD into the Inception-SE training loop
-  - Compare baseline vs PDD models
-  - Evaluate accuracy, macro-F1, AUC, class-level metrics
-  - Identify when PDD helps and when it does not
+**motivation:**
+  - Deep learning on PTB-XL is computationally expensive.
+  - PDD attempts to improve efficiency by sampling based on difficulty.
+  - The project evaluates whether PDD helps without reducing generalization.
 
-repository_structure:
-  - train_inception.py: "Inception-SE baseline"
-  - train_incepse_pdd.py: "Inception-SE + PDD training"
-  - train_pdd.py: "Alternate PDD implementation"
-  - evaluate_model.py: "Evaluation script (Accuracy, Macro-F1, AUC, confusion matrix)"
-  - threshold_search.py: "Threshold finder"
-  - aggregate_metrics.py: "Aggregates results from all experiments"
-  - results/: "Logs, checkpoints, metrics, CSV outputs"
-  - README.md
+**goals:**
+  - Build a strong Inception-SE baseline.
+  - Compute difficulty scores for PTB-XL.
+  - Integrate PDD with the training loop.
+  - Compare baseline vs PDD on accuracy, macro-F1, and class behavior.
+  - Evaluate scenarios where PDD helps or does not help.
 
-legacy_repo:
-  name: "Baseline-V2"
-  url: "https://github.com/Veerendhrakumardangeti/baseline-V2"
-  notes: "Contains earlier CNN-based experiments with limited capacity"
+**repository_structure:**
+  **files:**
+    - train_inception.py: "Inception-SE baseline training"
+    - train_incepse_pdd.py: "Inception-SE with PDD integrated"
+    - train_pdd.py: "Standalone PDD implementation"
+    - evaluate_model.py: "Evaluation (accuracy, macro-F1, AUC, confusion matrix)"
+    - threshold_search.py
+    - aggregate_metrics.py: "Aggregates all experiment results"
+    - results/: "Saved training runs, logs, CSVs"
+    - README.md
+  legacy:
+    url: "https://github.com/Veerendhrakumardangeti/baseline-V2"
+    description: "Earlier CNN-based baseline with initial PDD experiments"
 
 model_evolution:
   baseline_v2:
-    model: "1D-CNN"
-    features:
-      - Simple model
-      - Early PDD-SRD prototypes
-      - Limited learning capacity
+    architecture: "1D-CNN"
+    notes:
+      - Early PDD-SRD testing
+      - Limited model capacity
   baseline_v3:
-    model: "Inception-SE"
+    architecture: "Inception-SE (deep, expressive)"
     improvements:
-      - Deeper and more expressive
-      - Better representation learning
-      - More stable optimization
+      - Stronger representations
+      - More stable training
       - Updated PDD logic
-      - Dramatic improvement in validation metrics
-    used_for_final_results: true
+      - Significant performance boost
+    status: "Primary model used for experiments"
 
-running_code:
-  train_baseline:
-    command: |
-      python train_incepse_pdd.py ^
-        --data_dir C:\Users\dines\results\baseline ^
-        --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu ^
-        --epochs 30 ^
-        --batch_size 64 ^
+commands:
+  train_inception_se:
+    command: >
+      python train_incepse_pdd.py
+        --data_dir C:\Users\dines\results\baseline
+        --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu
+        --epochs 30
+        --batch_size 64
         --num_workers 0
-
   evaluate_baseline:
-    command: |
-      python evaluate_model.py ^
-        --data_dir C:\Users\dines\results\baseline ^
-        --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu ^
+    command: >
+      python evaluate_model.py
+        --data_dir C:\Users\dines\results\baseline
+        --ckpt_dir C:\Users\dines\results\incepse_retrain_full_cpu
         --batch_size 64
-
   train_pdd:
-    command: |
-      python train_pdd.py ^
-        --data_dir C:\Users\dines\results\baseline ^
-        --difficulty C:\Users\dines\results\baseline\difficulty.npy ^
-        --ckpt_dir C:\Users\dines\results\pdd_final ^
-        --epochs 30 ^
-        --batch_size 32 ^
+    command: >
+      python train_pdd.py
+        --data_dir C:\Users\dines\results\baseline
+        --difficulty C:\Users\dines\results\baseline\difficulty.npy
+        --ckpt_dir C:\Users\dines\results\pdd_final
+        --epochs 30
+        --batch_size 32
         --num_workers 0
-
   evaluate_pdd:
-    command: |
-      python evaluate_model.py ^
-        --data_dir C:\Users\dines\results\baseline ^
-        --ckpt_dir C:\Users\dines\results\pdd_final ^
+    command: >
+      python evaluate_model.py
+        --data_dir C:\Users\dines\results\baseline
+        --ckpt_dir C:\Users\dines\results\pdd_final
         --batch_size 64
-
   aggregate_results:
     command: "python aggregate_metrics.py"
-    output_example: "results_summary_20251211_124257.csv"
+    output: "results_summary_YYYYMMDD_HHMMSS.csv"
 
-results_summary:
-  
----
+  best_model:
+    name: "Inception-SE baseline"
+    val_accuracy: 0.8571
+    macro_f1: 0.72
+  observations:
+    - The Inception-SE baseline generalizes strongly.
+    - PDD did not outperform the baseline in current configuration.
+    - PDD requires improved schedules and adaptive dropout strategies.
+    - Deeper architectures react more sensitively to difficulty-based sampling.
 
 # 📊 Results Summary
 
@@ -125,15 +119,23 @@ The baseline model already fits the dataset well, and PDD needs further tuning f
 4. Evaluate baseline  
 5. Train PDD variants  
 6. Evaluate PDD models  
-7. Aggregate all experiment results  
+7. Aggregate all experiment results
 
----
+outputs:
+  files_generated:
+    - best_model.pth
+    - val_metrics.npz
+    - test_metrics.npz
+    - val_confusion.csv
+    - test_confusion.csv
+    - val_perclass.csv
+    - test_perclass.csv
+  aggregated_results: "Generated via aggregate_metrics.py"
 
+---------------------------------------------------------------
 # 💾 Output Files
 
 Each experiment produces:
-
-
    
   observation: "PDD did NOT outperform the baseline."
 
